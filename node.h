@@ -48,26 +48,11 @@ public:
    // Construct
    //
 
-<<<<<<< HEAD
-   Node()
-      : data(), pNext(nullptr), pPrev(nullptr)
-   {}
-
-   Node(const T& data)
-      : data(data), pNext(nullptr), pPrev(nullptr)
-   {}
-
-   Node(T&& data)
-      : data(std::move(data)), pNext(nullptr), pPrev(nullptr)
-   {}
-
-=======
    Node() : pNext(nullptr), pPrev(nullptr) {}
    
    Node(const T& data) : data(data), pNext(nullptr), pPrev(nullptr) {}
 
    Node(T&& data) : data(std::move(data)), pNext(nullptr), pPrev(nullptr) {}
->>>>>>> a1065c4128b0a306baac9f9cfbef213e17741857
 
    //
    // Member variables
@@ -89,21 +74,6 @@ public:
 template <class T>
 inline Node<T>* copy(const Node<T>* pSource)
 {
-<<<<<<< HEAD
-   if (!pSource)
-      return nullptr;
-
-   Node<T>* pDestination = new Node<T>(pSource->data);
-   const Node<T>* pSrc = pSource;
-   Node<T>* pDes = pDestination;
-
-   for (pSrc = pSrc->pNext; pSrc != nullptr; pSrc = pSrc->pNext)
-   {
-      pDes = insert(pDes, pSrc->data, true);
-   }
-
-   return pDestination;
-=======
    if (pSource == nullptr)
    {
       return nullptr;
@@ -122,7 +92,6 @@ inline Node<T>* copy(const Node<T>* pSource)
       pCurrentSource = pCurrentSource->pNext;
    }
    return pDes;
->>>>>>> a1065c4128b0a306baac9f9cfbef213e17741857
 }
 
 
