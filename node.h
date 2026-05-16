@@ -22,6 +22,14 @@
 #include <cassert>     // for ASSERT
 #include <iostream>    // for NULL
 
+// FORWARD DECLARATIONS
+
+template <class T>
+class Node;
+
+template <class T>
+Node<T>* insert(Node<T>* pCurrent, const T& t, bool after);
+
 /*************************************************
  * NODE
  * the node class.  Since we do not validate any
@@ -40,19 +48,18 @@ public:
    // Construct
    //
 
-   Node() 
-   { 
-      pNext = pPrev = this;
-   }
-   Node(const T& data) 
-   {
-      pNext = pPrev = this;
-   }
+   Node()
+      : data(), pNext(nullptr), pPrev(nullptr)
+   {}
 
-   Node(T&& data) 
-   {
-      pNext = pPrev = this;
-   }
+   Node(const T& data)
+      : data(data), pNext(nullptr), pPrev(nullptr)
+   {}
+
+   Node(T&& data)
+      : data(std::move(data)), pNext(nullptr), pPrev(nullptr)
+   {}
+
 
    //
    // Member variables
@@ -72,10 +79,25 @@ public:
  *   COST   : O(n)
  **********************************************/
 template <class T>
-inline Node <T> * copy(const Node <T> * pSource) 
+inline Node<T>* copy(const Node<T>* pSource)
 {
-   return new Node<T>;
+   if (!pSource)
+      return nullptr;
+
+   Node<T>* pDestination = new Node<T>(pSource->data);
+   const Node<T>* pSrc = pSource;
+   Node<T>* pDes = pDestination;
+
+   for (pSrc = pSrc->pNext; pSrc != nullptr; pSrc = pSrc->pNext)
+   {
+      pDes = insert(pDes, pSrc->data, true);
+   }
+
+   return pDestination;
 }
+
+
+
 
 /***********************************************
  * Assign
@@ -86,10 +108,12 @@ inline Node <T> * copy(const Node <T> * pSource)
  *   COST   : O(n)
  **********************************************/
 template <class T>
-inline void assign(Node <T> * & pDestination, const Node <T> * pSource)
+inline void assign(Node<T>*& pDestination, const Node<T>* pSource)
 {
-   
+
 }
+
+
 
 /***********************************************
  * SWAP
@@ -97,10 +121,11 @@ inline void assign(Node <T> * & pDestination, const Node <T> * pSource)
  *   COST   : O(1)
  **********************************************/
 template <class T>
-inline void swap(Node <T>* &pLHS, Node <T>* &pRHS)
+inline void swap(Node<T>*& pLHS, Node<T>*& pRHS)
 {
-   
+
 }
+
 
 /***********************************************
  * REMOVE
@@ -112,9 +137,10 @@ inline void swap(Node <T>* &pLHS, Node <T>* &pRHS)
 template <class T>
 inline Node <T> * remove(const Node <T> * pRemove) 
 {
-   
    return new Node<T>;
 }
+
+
 
 
 /**********************************************
@@ -129,12 +155,45 @@ inline Node <T> * remove(const Node <T> * pRemove)
  *   COST    : O(1)
  **********************************************/
 template <class T>
-inline Node <T> * insert(Node <T> * pCurrent,
-                  const T & t,
-                  bool after = false)
+inline Node<T> * insert(Node <T> * pCurrent, const T & t, bool after)
 {
-   return new Node<T>();
+
+   Node<T>* pNew = new Node<T>(t);
+
+   if (pCurrent != nullptr and after == false)
+   {
+      pNew->pNext = pCurrent;
+      pNew->pPrev = pCurrent->pPrev;
+
+
+      pCurrent->pPrev = pNew;
+
+      if (pNew->pPrev)
+      {
+         pNew->pPrev->pNext = pNew;
+      }
+
+   }
+
+   if (pCurrent != nullptr and after == true)
+   {
+      pNew->pPrev = pCurrent;
+      pNew->pNext = pCurrent->pNext;
+
+
+      pCurrent->pNext = pNew;
+
+      if (pNew->pNext)
+      {
+         pNew->pNext->pPrev = pNew;
+      }
+
+   }
+
+   return pNew;
 }
+
+
 
 /******************************************************
  * FIND
@@ -151,6 +210,8 @@ inline size_t size(const Node <T> * pHead)
    return 99;
 }
 
+
+
 /***********************************************
  * DISPLAY
  * Display all the items in the linked list from here on back
@@ -165,6 +226,8 @@ inline std::ostream & operator << (std::ostream & out, const Node <T> * pHead)
    return out;
 }
 
+
+
 /*****************************************************
  * FREE DATA
  * Free all the data currently in the linked list
@@ -173,9 +236,16 @@ inline std::ostream & operator << (std::ostream & out, const Node <T> * pHead)
  *   COST    : O(n)
  ****************************************************/
 template <class T>
-inline void clear(Node <T> * & pHead)
+inline void clear(Node <T>*& pHead)
 {
-   
+   while (pHead != nullptr)
+   {
+      Node<T>* pDelete = pHead;
+      pHead = pHead->pNext;
+      delete pDelete;
+   }
 }
+
+
 
 
