@@ -32,15 +32,15 @@ public:
       //test_copy_standard(); //NYI
       
       // Assign
-      //test_assign_emptyToEmpty();
-      //test_assign_standardToEmpty();
-      //test_assign_emptyToStandard();
-      //test_assign_smallToBig();
-      //test_assign_bigToSmall();
+      test_assign_emptyToEmpty();
+      test_assign_standardToEmpty();
+      test_assign_emptyToStandard();
+      test_assign_smallToBig(); // NYI
+      test_assign_bigToSmall();
       //test_swap_emptyEmpty();
       //test_swap_emptyStandard();
       //test_swap_standardEmpty();
-      //test_swap_oneTwo();
+      //test_swap_oneTwo(); // NYI
 
       // Insert
       test_insert_emptyBefore();
@@ -303,16 +303,34 @@ public:
       //    +----+   +----+   +----+
       //    | 11 | - | 26 | - | 31 |
       //    +----+   +----+   +----+
-      //     p67      p89  
+      Node <Spy>* p11, * p26, * p31;
+      setupStandardFixture(p11, p26, p31);
+      //     p67      p89
       //    +----+   +----+
       //    | 67 | - | 89 |
       //    +----+   +----+
+      Node <Spy>* p67, * p89;
+      p67 = new Node <Spy>(Spy(67));
+      p89 = new Node <Spy>(Spy(89));
+      p67->pNext = p89;
+      p89->pPrev = p67;
+      Spy::reset();
       // exercise
+      assign(p11, p67);
       // verify
-      // destroy [31]
-      // delete  [31]
-      // assign [67][89] onto [11][26];
-      assertUnit(NOT_YET_IMPLEMENTED);
+      assertUnit(Spy::numDestructor() == 1);  // destroy [31]
+      assertUnit(Spy::numDelete() == 1);      // delete  [31]
+      assertUnit(Spy::numCopy() == 0);
+      assertUnit(Spy::numAlloc() == 0);
+      assertUnit(Spy::numDefault() == 0);
+      assertUnit(Spy::numNondefault() == 0);
+      assertUnit(Spy::numCopyMove() == 0);
+      assertUnit(Spy::numAssign() == 2);      // assign [67][89] onto [11][26];
+      assertUnit(Spy::numAssignMove() == 0);
+      assertUnit(Spy::numSwap() == 0);
+      assertUnit(p11->data == 67);
+      assertUnit(p26->data == 89);
+
       //     p11      p26  
       //    +----+   +----+
       //    | 67 | - | 89 |

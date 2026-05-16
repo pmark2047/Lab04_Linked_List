@@ -108,7 +108,37 @@ inline Node<T>* copy(const Node<T>* pSource)
 template <class T>
 inline void assign(Node<T>*& pDestination, const Node<T>* pSource)
 {
-
+   
+   Node <T> * pDes = pDestination;
+   Node <T> *pDesPrev = nullptr;
+   const Node <T> * pSrc = pSource;
+   while (pSrc != nullptr && pDes != nullptr)
+   {
+      pDes->data = pSrc->data;
+      pDesPrev = pDes;
+      
+      pDes = pDes->pNext;
+      pSrc = pSrc->pNext;
+   }
+   
+   while (pSrc != nullptr)
+   {
+      pDesPrev = insert(pDesPrev, pSrc->data, true);
+      
+      if (pDestination == nullptr)
+         pDestination = pDesPrev;
+      
+      pSrc = pSrc->pNext;
+   }
+   if (pDes != nullptr)
+   {
+      if (pDesPrev != nullptr)
+         pDesPrev->pNext = nullptr;
+      else
+         pDestination = nullptr;
+      
+      clear(pDes);
+   }
 }
 
 
