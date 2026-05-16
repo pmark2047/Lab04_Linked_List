@@ -48,6 +48,7 @@ public:
    // Construct
    //
 
+<<<<<<< HEAD
    Node()
       : data(), pNext(nullptr), pPrev(nullptr)
    {}
@@ -60,6 +61,13 @@ public:
       : data(std::move(data)), pNext(nullptr), pPrev(nullptr)
    {}
 
+=======
+   Node() : pNext(nullptr), pPrev(nullptr) {}
+   
+   Node(const T& data) : data(data), pNext(nullptr), pPrev(nullptr) {}
+
+   Node(T&& data) : data(std::move(data)), pNext(nullptr), pPrev(nullptr) {}
+>>>>>>> a1065c4128b0a306baac9f9cfbef213e17741857
 
    //
    // Member variables
@@ -81,6 +89,7 @@ public:
 template <class T>
 inline Node<T>* copy(const Node<T>* pSource)
 {
+<<<<<<< HEAD
    if (!pSource)
       return nullptr;
 
@@ -94,6 +103,26 @@ inline Node<T>* copy(const Node<T>* pSource)
    }
 
    return pDestination;
+=======
+   if (pSource == nullptr)
+   {
+      return nullptr;
+   }
+   
+   Node <T> * pDes = new Node <T> (pSource->data);
+   const Node <T> * pCurrentSource = pSource->pNext;
+   Node <T> * pCurrentDes = pDes;
+   
+   while (pCurrentSource != nullptr)
+   {
+      Node <T> * pNewNode = new Node <T> (pCurrentSource->data);
+      pCurrentDes->pNext = pNewNode;
+      pNewNode->pPrev = pCurrentDes;
+      pCurrentDes = pNewNode;
+      pCurrentSource = pCurrentSource->pNext;
+   }
+   return pDes;
+>>>>>>> a1065c4128b0a306baac9f9cfbef213e17741857
 }
 
 
@@ -207,7 +236,14 @@ inline Node<T> * insert(Node <T> * pCurrent, const T & t, bool after)
 template <class T>
 inline size_t size(const Node <T> * pHead)
 {
-   return 99;
+   size_t count = 0;
+   const Node <T> * current = pHead;
+   while (current != nullptr)
+   {
+      count++;
+      current = current->pNext;
+   }
+   return count;
 }
 
 
